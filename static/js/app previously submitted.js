@@ -24,51 +24,41 @@ function buildTable(data){
     });
 }
 
-// Keep track of all filters
-let filters = {};
-
 function updateFilters() {
+    // Keep track of all filters
+    var filters = {};
+    // Make D3 look for each id in the HTML tags and hold it in the filters KVP array.
+    let date = d3.select("#datetime").property("value");
+    let city = d3.select("#city").property("value");
+    let state = d3.select("#state").property("value");
+    let country = d3.select("#country").property("value");
+    let shape = d3.select("#shape").property("value");
 
-    // Save the element, value and id of the filter that was changed.
-    let changedElement = d3.select(this);
-    let filterValue = changedElement.property("value").trim();
-    let filterId = changedElement.attr("id");
+    filters["datetime"]=date;
+    filters["city"]=city;
+    filters["state"]=state;
+    filters["country"]=country;
+    filters["shape"]=shape;
     
-    // If a filter value was entered then add that filterId and value
-    // to the filters list.
-    if (filterValue){
-        filters[filterId] = filterValue;
-    }
-    // Otherwise, clera that filter from the filters object
-    else {
-        delete filters[filterId];
-    }
-    // Call function to apply all filters and rebuild the table
-    filterTable();
-}
-   
-function filterTable(){
-    // Set the filteredData to the tableData
+    // Set a default filter and save it to a new variable.
     let filteredData = tableData;
-    // Loop through all of the filters and keep any data that
-    // matches the filter values
+    // Apply `filter` to the table data to only keep the
+    // rows where each key's value matches the filter value
+    // only if the filter value is not empty.
     Object.entries(filters).forEach(([key,value])=> {
+        if (value != ""){   
             filteredData = filteredData.filter(row => row[key] == value);
+        };
     })
+
     // Rebuild the table using the filtered data
+    //@NOTE: If no date was entered, then filteredData will
+    //just be the original tableData.
     buildTable(filteredData);
 };
 
-function clearFilters(){
-d3.selectAll("input").property("value","")
-filters = {}
-buildTable(tableData);
-}
-
-//Attach an eventlistener for any input change
-d3.selectAll("input").on("change",updateFilters);
-//Attach an eventlistener for the reset button
-d3.select("#clear-btn").on("click",clearFilters);
+//Attach an event to listen for the form button
+d3.selectAll("#filter-btn").on("click",updateFilters);
 
 //Build the table when the page loads
 buildTable(tableData);
