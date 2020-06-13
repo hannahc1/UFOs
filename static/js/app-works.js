@@ -27,7 +27,7 @@ function buildTable(data){
 function updateFilters() {
     // Keep track of all filters
     var filters = {};
-    // Make D3 look for each id in the HTML tags and hold it in the filters KVP array.
+    // Make D3 look for each id in the HTML tags and hold it in the filters object.
     let date = d3.select("#datetime").property("value");
     let city = d3.select("#city").property("value");
     let state = d3.select("#state").property("value");
@@ -42,14 +42,15 @@ function updateFilters() {
     
     // Set a default filter and save it to a new variable.
     let filteredData = tableData;
-    // Apply `filter` to the table data to only keep the
-    // rows where each key's value matches the filter value
-    // only if the filter value is not empty.
+
     Object.entries(filters).forEach(([key,value])=> {
-        if (value != ""){   
+        if (value != ""){
+            // Apply `filter` to the table data to only keep the
+            // rows where each key's value matches the filter value
             filteredData = filteredData.filter(row => row[key] == value);
         };
     })
+ 
 
     // Rebuild the table using the filtered data
     //@NOTE: If no date was entered, then filteredData will
