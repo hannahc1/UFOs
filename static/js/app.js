@@ -1,7 +1,7 @@
 // import the date from data.js
 const tableData = data;
 // Reference the HTML table using d3
-var tbody = d3/Selection("tbody");
+var tbody = d3.select("tbody");
 
 // Build a table and pass data as the argument and clear data.
 function buildTable(data){
